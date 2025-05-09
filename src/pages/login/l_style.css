@@ -1,8 +1,12 @@
 .container {
     display: flex;
-    height: 100vh;
     justify-content: center;
     align-items: center;
+    font-size: 17px;
+    height: 100vh;
+    width: 100vw;        /* garante largura total */
+    margin: 0;
+    padding: 0;
   }
   
   .card {
@@ -31,8 +35,10 @@
   .form-group input {
     width: 100%;
     padding: 0.6rem;
+    font-size: 17px;
     border-radius: 6px;
-    border: 1px solid #ccc;
+    background-color: #ccc;
+    border: 1px solid #000;
   }
   
   .btn {

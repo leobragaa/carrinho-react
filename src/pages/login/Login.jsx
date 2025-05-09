@@ -12,6 +12,8 @@ export default function Login() {
       if (!email || !senha) {
         alert("Preencha todos os campos!");
         return;
+      }else{
+        alert("Login Feito")
       }
       navigate("/produtos");
   };
@@ -19,7 +21,7 @@ export default function Login() {
   return (
     <div className="container">
       <div className="card">
-        <h2 className="title">Login</h2>
+        <h2 className="title">FAÇA SEU LOGIN!</h2>
         <div className="form-group">
           <label>Email</label>
           <input
@@ -42,7 +44,7 @@ export default function Login() {
           Entrar
         </button>
         <div className="link">
-          Não tem uma conta? <Link to="/cadastro">Criar conta</Link>
+          <Link to="/cadastro">Criar conta</Link>
         </div>
       </div>
     </div>

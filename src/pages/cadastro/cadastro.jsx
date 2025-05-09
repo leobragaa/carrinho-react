@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import './c_style.css';
 
 export default function Cadastro() {
@@ -9,11 +10,17 @@ export default function Cadastro() {
   const [numeroCasa, setNumero] = useState('');
   const [tipo, setTipo] = useState('');
   const [senha, setSenha] = useState('');
+  const navigate = useNavigate();
 
+  const handleLogin = () =>{
+    navigate("/login");
+  }
   const handleCadastro = () => {
     if (!nome || !email || !senha || !rua || !cep || !numeroCasa || !tipo ) {
       alert('Preencha todos os campos!');
       return;
+    }else{
+      alert('Cadastro Realizado!')
     }
     console.log(
       'Nome: ', nome, 
@@ -86,6 +93,9 @@ export default function Cadastro() {
             placeholder="Crie uma senha"
           />
         </div>
+        <button className="btn telaLogin" onClick={handleLogin}>
+          Login
+        </button>
         <button className="btn success" onClick={handleCadastro}>
           Cadastrar
         </button>
