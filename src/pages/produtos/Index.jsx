@@ -1,11 +1,12 @@
-import React, { useState } from "react"; // Added useState import
-import { produtos } from "./produto";
+import React, { useState } from "react";
+import { ProdutoContext } from '../context/ProdutoContext';
 import "./styles.css";
 
 export default function Index() {
   const [carrinho, setCarrinho] = useState([]);
   const [totalItens, setTotalItens] = useState(0);
   const [carrinhoAberto, setCarrinhoAberto] = useState(false);
+  const { produtos, setProdutos } = useContext(ProdutoContext);
 
   const adicionarAoCarrinho = (produto) => {
     // Verifica se o produto já está no carrinho

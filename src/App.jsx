@@ -1,13 +1,12 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import Routers from "./components/routers/route";
+import { ProdutoContext } from "./context/ProdutoContext";
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <Routers />
-    </BrowserRouter>
+    <ProdutoContext>
+      <AppRoutes />
+    </ProdutoContext>
   );
 }
 

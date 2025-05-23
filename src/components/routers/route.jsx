@@ -11,9 +11,6 @@ function Routers() {
         path="/" element={<Login />}
       />
       <Route
-        path="/login" element={<Login />}
-      />
-      <Route
         path="/cadastro" element={<Cadastro />}
       />
       <Route
