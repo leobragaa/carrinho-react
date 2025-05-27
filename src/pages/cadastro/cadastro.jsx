@@ -13,7 +13,7 @@ export default function Cadastro() {
   const navigate = useNavigate();
 
   const handleLogin = () =>{
-    navigate("/login");
+    navigate("/");
   }
   const handleCadastro = () => {
     if (!nome || !email || !senha || !rua || !cep || !numeroCasa || !tipo ) {

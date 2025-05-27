@@ -1,13 +1,13 @@
-import React from "react";
-import { ProdutoContext } from "./context/ProdutoContext";
+import { AuthProvider } from "./context/AuthContext";
+import { ProdutoProvider } from "./context/ProdutoContext";
+import AppRoutes from "./components/routers/route";
 
-function App() {
-
+export default function App() {
   return (
-    <ProdutoContext>
-      <AppRoutes />
-    </ProdutoContext>
+    <AuthProvider>
+      <ProdutoProvider>
+        <AppRoutes />
+      </ProdutoProvider>
+    </AuthProvider>
   );
 }
-
-export default App;
