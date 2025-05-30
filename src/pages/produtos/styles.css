@@ -6,8 +6,8 @@
 }
 
 body {
-  background-color: #fff; /* Changed to white */
-  color: #333; /* Dark text for better contrast on white */
+  background-color: #333; /* Changed to white */
+  color: #fff; /* Dark text for better contrast on white */
   min-height: 100vh;
 }
 
@@ -89,7 +89,7 @@ body {
 }
 
 .botao-adicionar:hover {
-  background-color: #FF8C42; /* Lighter orange */
+  background-color: linear-gradient(to right, #4FACFE, #8CE7FE);; /* Lighter orange */
 }
 
 /* Estilos do carrinho */
@@ -131,7 +131,7 @@ body {
 
 .destaque {
   font-weight: bold;
-  color: #FF6B00; /* Orange */
+  color: #4FACFE; /* Orange */
 }
 
 .botao-fechar {
@@ -156,9 +156,9 @@ body {
 }
 
 .imagem-item {
-  width: 80px;
-  height: 80px;
-  background-color: #f9f9f9; /* Light background */
+  width: 10px;
+  height: 10px;
+  background-color: #f9f9f9;
   border-radius: 4px;
   overflow: hidden;
   display: flex;
@@ -166,13 +166,20 @@ body {
   justify-content: center;
 }
 
+.imagem-carrinho {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+}
+
 .imagem-item img {
   width: auto;
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
-  max-height: 100%;
-  object-fit: contain; /* Better for product images */
-  mix-blend-mode: multiply; /* Better for product images on white */
+  max-height: 50%;
+  object-fit: contain;
+  mix-blend-mode: multiply; 
 }
 
 .detalhes-item {
@@ -198,7 +205,7 @@ body {
 .menos, .mais {
   width: 30px;
   height: 30px;
-  background-color: #FF6B00; /* Orange */
+  background: linear-gradient(to right, #4FACFE, #8CE7FE);
   border: none;
   border-radius: 6px;
   color: white;
@@ -211,7 +218,7 @@ body {
 }
 
 .menos:hover, .mais:hover {
-  background-color: #FF8C42; /* Lighter orange */
+  background: linear-gradient(to right, #4FACFE, #8CE7FE); /* Lighter orange */
 }
 
 .quantidade {
@@ -232,14 +239,14 @@ body {
 
 .valor-total {
   font-weight: bold;
-  color: #FF6B00; /* Orange */
+  color: #4FACFE; /* Orange */
 }
 
 .cupom {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  color: #FF6B00; /* Orange */
+  color: #4FACFE; /* Orange */
   margin-bottom: 1rem;
   cursor: pointer;
 }
@@ -251,17 +258,20 @@ body {
 .finalizar-compra {
   width: 100%;
   padding: 1rem;
-  background-color: #FF6B00; /* Orange */
+  background: linear-gradient(to right, #4FACFE, #8CE7FE);
+  transition: all 0.2s ease;
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.3s;
 }
 
+
 .finalizar-compra:hover {
-  background-color: #FF8C42; /* Lighter orange */
+  background-color: linear-gradient(to right, #4FACFE, #4FACFE);
+  transform: scale(1.05); /* Lighter orange */
 }
 
 /* Estilizando a barra de rolagem */
@@ -274,22 +284,22 @@ body {
 }
 
 .itens::-webkit-scrollbar-thumb {
-  background: #FF6B00; /* Orange thumb */
+  background: #007bff; /* Orange thumb */
   border-radius: 3px;
 }
 
 .itens::-webkit-scrollbar-thumb:hover {
-  background: #FF8C42; /* Lighter orange */
+  background: linear-gradient(to right, #4FACFE, #8CE7FE);
 }
 
 /* Botão para abrir o carrinho quando fechado - moved to top */
 .carrinho-toggle {
   position: fixed;
-  top: 30px; /* Changed from bottom to top */
+  top: 30px;
   right: 30px;
   width: 60px;
   height: 60px;
-  background-color: #FF6B00; /* Orange */
+  background: linear-gradient(to right, #4FACFE, #8CE7FE);
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -297,11 +307,13 @@ body {
   cursor: pointer;
   z-index: 999;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s;
+  transition: background 0.3s;
 }
 
+
 .carrinho-toggle:hover {
-  background-color: #FF8C42; /* Lighter orange */
+  background-color: #FF8C42;
+  transform: scale(1.05); 
 }
 
 .carrinho-icone {
@@ -313,7 +325,7 @@ body {
   position: absolute;
   top: -5px;
   right: -5px;
-  background-color: #333; /* Dark instead of orange for contrast */
+  background-color: #333; 
   color: white;
   border-radius: 50%;
   width: 24px;
@@ -355,9 +367,7 @@ body {
   }
   
   .carrinho-toggle {
-    top: 15px;
-    right: 15px;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
   }
 }

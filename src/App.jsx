@@ -1,12 +1,12 @@
 import { AuthProvider } from "./context/AuthContext";
 import { ProdutoProvider } from "./context/ProdutoContext";
-import AppRoutes from "./components/routers/route";
+import Routers from "./components/routers/Routers";
 
 export default function App() {
   return (
     <AuthProvider>
       <ProdutoProvider>
-        <AppRoutes />
+        <Routers />
       </ProdutoProvider>
     </AuthProvider>
   );

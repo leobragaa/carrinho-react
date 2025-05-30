@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import './l_style.css';
 
 export default function Login() {
@@ -10,6 +11,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,16 +37,18 @@ export default function Login() {
 
     try {
       setLoading(true);
-      // Simulação de requisição de login
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Aqui você faria a chamada real à API:
-      // const response = await api.post('/login', formData);
-      // localStorage.setItem('token', response.data.token);
-      
-      navigate("/produtos");
+      await new Promise(resolve => setTimeout(resolve, 1000)); 
+
+      // Salva o usuário no contexto
+      const usuarioFake = {
+        nome: "Usuário Teste",
+        email: formData.email
+      };
+      login(usuarioFake);
+
+      navigate("/dashboard");
     } catch (err) {
-      setError("Credenciais inválidas ou erro no servidor");
+      setError("Credenciais Inválidas ou erro no servidor");
     } finally {
       setLoading(false);
     }

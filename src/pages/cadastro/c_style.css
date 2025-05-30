@@ -1,12 +1,14 @@
 .container {
-    display: flex;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-  }
+  min-height: 100vh;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+}
   
   .card {
-    background: #4191E1;
+    background: #0E2A56;
     padding: 4rem;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -17,6 +19,7 @@
   .title {
     text-align: center;
     margin-bottom: 1rem;
+    color: #85e4ff;
   }
   
   .form-group {
@@ -25,6 +28,7 @@
   
   .form-group label {
     display: block;
+    color: #85e4ff;
     margin-bottom: 0.3rem;
   }
   
@@ -40,16 +44,41 @@
     width: 100%;
     padding: 0.8rem;
     border: none;
+    transition: all 0.2s ease;
     border-radius: 6px;
     cursor: pointer;
     margin-top: 0.5rem;
     font-weight: bold;
   }
   .btn.telaLogin {
-    background-color: #28a745;
+    background: linear-gradient(to right, #4FACFE, #8CE7FE);
     color: white;
+    transition: transform 0.2s ease;
   } 
+
   .btn.success {
-    background-color: #28a745;
+    background: linear-gradient(to right, #4FACFE, #8CE7FE);
     color: white;
+    transition: transform 0.2s ease;
   }
+
+  .btn.telaLogin:hover {
+    background: linear-gradient(to right, #4FACFE, #4FACFE);
+    transform: scale(1.09);
+  }
+  
+  .btn.success:hover {
+    background: linear-gradient(to right, #4FACFE, #8CE7FE);
+    transform: scale(1.09);
+  }
+
+ @media (max-width: 768px) {
+  .container {
+    align-items: flex-start;
+  }
+
+  .card {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}

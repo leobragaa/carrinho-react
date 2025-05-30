@@ -1,6 +1,6 @@
 //codigo do carrinho
 import React from "react";
-import './carrinho.css';
+import '../../pages/produtos/style.css';
 import ImgCadeira from "../../assets/CadeiraGamer.jpg"
 import ImgHeadSet from "../../assets/HeadsetGamer.jpg"
 import ImgMonitor from "../../assets/MonitoGamer.jpg"

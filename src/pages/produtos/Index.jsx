@@ -149,7 +149,12 @@ export default function Index() {
       {/* Botão flutuante do carrinho */}
       {!carrinhoAberto && (
         <div className="carrinho-toggle" onClick={toggleCarrinho}>
-          <span className="carrinho-icone">🛒</span>
+          <span className="carrinho-icone">
+            <img className="imagem-carrinho" 
+              src="https://img.icons8.com/?size=100&id=UFqn3euqKWC2&format=png&color=000000"
+              alt="Icone Carrinho"
+            />
+          </span>
           {totalItens > 0 && (
             <span className="carrinho-contador">{totalItens}</span>
           )}
