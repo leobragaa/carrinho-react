@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "../../pages/login/Login"
-import Dashboard from "../../scenes/dashboard/Dashboard";
+import Dashboard from "../layout/Dashboard";
 import Cadastro from "../../pages/cadastro/cadastro";
 import PrivateRoute from "./PrivateRouter";
 import SeeProduct from "../../controller/SeeProduct";
-import UpdateProduct from "../../controller/SeeProduct";
-import  CreateProduct from "../../controller/SeeProduct";
+import UpdateProduct from "../../controller/UpdateProduct";
+import CreateProduct from "../../controller/CreateProduct";
 
 export default function Routers() {
   return (
