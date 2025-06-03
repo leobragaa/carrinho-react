@@ -16,6 +16,9 @@
     "@mui/material": "^7.1.0",
     "@mui/x-data-grid": "^8.4.0",
     "@prisma/client": "^6.8.2",
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
@@ -33,5 +36,18 @@
     "globals": "^16.0.0",
     "prisma": "^6.8.2",
     "vite": "^6.3.1"
-  }
+  },
+  "description": "Este repositorio tem objetivo em realização de compras em formato online de produtos\r de componentes de hardware.",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leobragaa/carrinho-react.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leobragaa/carrinho-react/issues"
+  },
+  "homepage": "https://github.com/leobragaa/carrinho-react#readme"
 }

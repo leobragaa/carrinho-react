@@ -1,38 +1,49 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./styleController.css";
 
 export default function CreateProduct() {
   const [nome, setNome] = useState("");
   const [valor, setValor] = useState("");
-  const [imagem, setImagem] = useState("");
+  const [imagemFile, setImagemFile] = useState(null); // Imagem como arquivo
   const [mensagem, setMensagem] = useState(null);
-  const [produtos, setProdutos] = useState([]); // Estado para armazenar os produtos
+  const [produtos, setProdutos] = useState([]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!nome || !valor || !imagem) {
+    if (!nome || !valor || !imagemFile) {
       setMensagem("Por favor, preencha todos os campos.");
       return;
     }
 
-    const produto = {
-      nome,
-      valor: parseFloat(valor),
-      imagem,
-      id: Date.now(), // Usamos o timestamp como ID único
-    };
-
     try {
-      // Adiciona o novo produto à lista de produtos
-      setProdutos([...produtos, produto]);
+      // Envia a imagem para o backend
+      const formData = new FormData();
+      formData.append("imagem", imagemFile);
+
+      const uploadResponse = await axios.post("http://localhost:3001/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const imagemUrl = uploadResponse.data.imageUrl;
+
+      // Envia os dados do produto
+      const produtoResponse = await axios.post("http://localhost:3001/produtos", {
+        nome,
+        preco: valor,
+        descricao: "", // opcional
+        imagemUrl,
+      });
+
+      setProdutos([...produtos, produtoResponse.data]);
       setMensagem("Produto criado com sucesso!");
       setNome("");
       setValor("");
-      setImagem("");
+      setImagemFile(null);
     } catch (error) {
-      setMensagem("Erro ao criar produto.");
       console.error(error);
+      setMensagem("Erro ao criar produto.");
     }
   };
 
@@ -42,34 +53,19 @@ export default function CreateProduct() {
       <form onSubmit={handleSubmit} className="produto-form">
         <div className="form-group">
           <label>Nome:</label>
-          <input
-            type="text"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-          />
+          <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
         </div>
         <div className="form-group">
           <label>Valor:</label>
-          <input
-            type="number"
-            value={valor}
-            onChange={(e) => setValor(e.target.value)}
-            step="0.01"
-          />
+          <input type="number" value={valor} onChange={(e) => setValor(e.target.value)} step="0.01" />
         </div>
         <div className="form-group">
-          <label>URL da Imagem:</label>
-          <input
-            type="text"
-            value={imagem}
-            onChange={(e) => setImagem(e.target.value)}
-          />
+          <label>Imagem (arquivo):</label>
+          <input type="file" onChange={(e) => setImagemFile(e.target.files[0])} />
         </div>
-        <button type="submit" className="submit-button">
-          Criar Produto
-        </button>
+        <button type="submit" className="submit-button">Criar Produto</button>
       </form>
-      
+
       {mensagem && <div className="mensagem">{mensagem}</div>}
 
       <div className="lista-produtos">
@@ -81,14 +77,14 @@ export default function CreateProduct() {
             {produtos.map((produto) => (
               <li key={produto.id} className="produto-item">
                 <h4>{produto.nome}</h4>
-                <p>Valor: R$ {produto.valor.toFixed(2)}</p>
-                {produto.imagem && (
-                  <img 
-                    src={produto.imagem} 
-                    alt={produto.nome} 
+                <p>Valor: R$ {produto.preco.toFixed(2)}</p>
+                {produto.imagemUrl && (
+                  <img
+                    src={produto.imagemUrl}
+                    alt={produto.nome}
                     className="produto-imagem"
                     onError={(e) => {
-                      e.target.onerror = null; 
+                      e.target.onerror = null;
                       e.target.src = "https://via.placeholder.com/150?text=Imagem+indisponível";
                     }}
                   />
