@@ -1,22 +1,55 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Usuario {
+  id       Int       @id @default(autoincrement())
+  nome     String
+  email    String    @unique
+  senha    String
+  endereco Endereco?
+  pedidos  Pedido[]
+  itemCarrinho ItemCarrinho[]
+}
+
+model Endereco {
+  id        Int     @id @default(autoincrement())
+  cep       String
+  rua       String
+  numero    String
+  tipo      String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId Int     @unique
+}
+
 model Produto {
-  id          Int     @id @default(autoincrement())
-  nome        String
-  preco       Float
-  descricao   String
-  criadoEm    DateTime @default(now())
+  id        Int        @id @default(autoincrement())
+  nome      String
+  descricao String?
+  preco     Float
+  imagem    String?
+  criadoEm  DateTime   @default(now())
+  itemCarrinhocarrinho  ItemCarrinho[]
+}
+
+model Pedido {
+  id        Int      @id @default(autoincrement())
+  usuarioId Int
+  status    String   @default("pendente")
+  data      DateTime @default(now())
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+}
+
+model ItemCarrinho {
+  id         Int     @id @default(autoincrement())
+  produtoId  Int
+  usuarioId  Int
+  quantidade Int
+  produto    Produto @relation(fields: [produtoId], references: [id])
+  usuario    Usuario @relation(fields: [usuarioId], references: [id])
 }

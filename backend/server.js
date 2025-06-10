@@ -1,76 +1,24 @@
-const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-const cors = require('cors');
-const multer = require('multer');
-const path = require('path');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+
+import authRoutes    from './routes/authRoutes.js';
+import produtoRoutes from './routes/produtosRoutes.js';
+import uploadRoutes  from './routes/uploadRoutes.js';
 
 const app = express();
-const prisma = new PrismaClient();
-
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:5176' }));
 app.use(express.json());
 
-// Serve arquivos estáticos da pasta "uploads"
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Configuração do multer para salvar imagens localmente
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName);
-  },
-});
-const upload = multer({ storage });
+app.use('/api/auth', authRoutes);
 
-// Rota de teste
-app.get('/', (req, res) => {
-  res.send('API Prisma funcionando!');
-});
 
-// Rota para upload de imagem
-app.post('/upload', upload.single('imagem'), (req, res) => {
-  const imageUrl = `http://localhost:3001/uploads/${req.file.filename}`;
-  res.json({ imageUrl });
-});
+app.use('/api/upload', uploadRoutes);
 
-// Listar todos os produtos
-app.get('/produtos', async (req, res) => {
-  const produtos = await prisma.produto.findMany();
-  res.json(produtos);
-});
+app.use('/api/produtos', produtoRoutes);
 
-// Criar um novo produto
-app.post('/produtos', async (req, res) => {
-  const { nome, preco, descricao, imagemUrl } = req.body;
-  const produto = await prisma.produto.create({
-    data: { nome, preco: parseFloat(preco), descricao, imagemUrl }
-  });
-  res.json(produto);
-});
+app.use('/uploads', express.static('uploads'));
 
-// Atualizar um produto
-app.put('/produtos/:id', async (req, res) => {
-  const { id } = req.params;
-  const { nome, preco, descricao, imagemUrl } = req.body;
-  const produto = await prisma.produto.update({
-    where: { id: parseInt(id) },
-    data: { nome, preco: parseFloat(preco), descricao, imagemUrl }
-  });
-  res.json(produto);
-});
-
-// Deletar um produto
-app.delete('/produtos/:id', async (req, res) => {
-  const { id } = req.params;
-  await prisma.produto.delete({
-    where: { id: parseInt(id) }
-  });
-  res.json({ message: 'Produto deletado com sucesso' });
-});
-
-// Porta do servidor
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+const PORT = process.env.PORT || 3002;
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

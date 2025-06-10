@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../axiosConfig";          // <- ajustado
 
 export default function SeeProduct() {
   const [produtos, setProdutos] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/produtos")
-      .then((res) => setProdutos(res.data))
-      .catch((err) => console.error("Erro ao buscar produtos:", err));
+    const fetchProdutos = async () => {
+      try {
+        const res = await axios.get("/api/produtos");  // baseURL já configurada
+        setProdutos(res.data);
+      } catch (err) {
+        console.error("Erro ao buscar produtos:", err);
+      }
+    };
+    fetchProdutos();
   }, []);
 
   return (
@@ -19,20 +25,23 @@ export default function SeeProduct() {
       ) : (
         <ul style={{ listStyle: "none", padding: 0 }}>
           {produtos.map((produto) => (
-            <li key={produto.id}>
+            <li key={produto.id} style={{ marginBottom: 20 }}>
               <h3>{produto.nome}</h3>
               <p>R$ {produto.preco.toFixed(2)}</p>
-              {produto.imagemUrl && (
-                <img
-                  src={produto.imagemUrl}
-                  alt={produto.nome}
-                  width={150}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "https://via.placeholder.com/150?text=Sem+Imagem";
-                  }}
-                />
-              )}
+              <img
+                src={produto.imagem
+                  ? produto.imagem.startsWith("http")
+                    ? produto.imagem
+                    : `${axios.defaults.baseURL}${produto.imagem}`
+                  : "https://via.placeholder.com/150?text=Sem+Imagem"
+                }
+                alt={produto.nome}
+                width={150}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "https://via.placeholder.com/150?text=Sem+Imagem";
+                }}
+              />
               {produto.descricao && <p>{produto.descricao}</p>}
             </li>
           ))}

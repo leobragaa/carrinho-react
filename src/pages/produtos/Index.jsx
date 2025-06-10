@@ -6,7 +6,7 @@ export default function Index() {
   const [carrinho, setCarrinho] = useState([]);
   const [carrinhoAberto, setCarrinhoAberto] = useState(false);
   const { produtos } = useContext(ProdutoContext);
-
+  
   // Calcula o total de itens baseado no carrinho
   const totalItens = useMemo(() => (
     carrinho.reduce((total, item) => total + item.quantidade, 0)

@@ -1,87 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./styleController.css";
+import { UPLOAD_URL, API_BASE_URL } from "../api/config";
 
 export default function UpdateProduct() {
   const [produtos, setProdutos] = useState([]);
-  const [modalAberto, setModalAberto] = useState(false);
+  const [mensagem, setMensagem] = useState("");
   const [produtoEditando, setProdutoEditando] = useState(null);
   const [novaImagemFile, setNovaImagemFile] = useState(null);
-  const [mensagem, setMensagem] = useState(null);
 
-  // Carregar produtos do backend
-  React.useEffect(() => {
-    axios.get("http://localhost:3001/produtos").then(res => setProdutos(res.data));
+  useEffect(() => {
+    axios.get(`${API_BASE_URL}/produtos`)
+      .then(res => setProdutos(res.data))
+      .catch(() => setMensagem("Erro ao carregar produtos."));
   }, []);
 
-  const abrirModal = (produto) => {
+  const iniciarEdicao = (produto) => {
     setProdutoEditando({ ...produto });
-    setModalAberto(true);
-    setMensagem(null);
+    setMensagem("");
+    setNovaImagemFile(null);
   };
 
-  const fecharModal = () => {
-    setModalAberto(false);
+  const cancelarEdicao = () => {
     setProdutoEditando(null);
     setNovaImagemFile(null);
-    setMensagem(null);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProdutoEditando((prev) => ({
-      ...prev,
-      [name]: name === "preco" ? parseFloat(value) || 0 : value,
-    }));
+    setMensagem("");
   };
 
   const salvarAlteracoes = async () => {
-    if (!produtoEditando.nome || !produtoEditando.preco) {
-      setMensagem("Preencha todos os campos.");
-      return;
-    }
-
     try {
-      let imagemUrl = produtoEditando.imagemUrl;
+      let imagemUrl = produtoEditando.imagem;
 
-      // Se uma nova imagem foi selecionada, fazer o upload
       if (novaImagemFile) {
         const formData = new FormData();
         formData.append("imagem", novaImagemFile);
-
-        const uploadRes = await axios.post("http://localhost:3001/upload", formData, {
+        const uploadRes = await axios.post(`${UPLOAD_URL}/upload`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-
         imagemUrl = uploadRes.data.imageUrl;
       }
 
-      // Atualiza produto
-      const res = await axios.put(`http://localhost:3001/produtos/${produtoEditando.id}`, {
+      await axios.put(`${API_BASE_URL}/produtos/${produtoEditando.id}`, {
         nome: produtoEditando.nome,
         preco: produtoEditando.preco,
         descricao: produtoEditando.descricao || "",
-        imagemUrl,
+        imagem: imagemUrl,
       });
 
-      // Atualiza localmente
-      setProdutos(produtos.map(p => p.id === res.data.id ? res.data : p));
-      fecharModal();
+      const produtosAtualizados = produtos.map((p) =>
+        p.id === produtoEditando.id ? { ...produtoEditando, imagem: imagemUrl } : p
+      );
+
+      setProdutos(produtosAtualizados);
+      setMensagem("Produto atualizado com sucesso.");
+      cancelarEdicao();
     } catch (error) {
-      console.error(error);
-      setMensagem("Erro ao atualizar produto.");
+      console.error("Erro ao atualizar produto:", error);
+      setMensagem("Erro ao atualizar o produto.");
     }
   };
 
   const removerProduto = async (id) => {
-    if (!window.confirm("Tem certeza que deseja remover este produto?")) return;
-
     try {
-      await axios.delete(`http://localhost:3001/produtos/${id}`);
+      await axios.delete(`${API_BASE_URL}/produtos/${id}`);
       setProdutos(produtos.filter((p) => p.id !== id));
+      setMensagem("Produto removido com sucesso.");
     } catch (error) {
-      console.error(error);
-      setMensagem("Erro ao remover produto.");
+      console.error("Erro ao remover produto:", error);
+      setMensagem("Erro ao remover o produto.");
     }
   };
 
@@ -90,48 +76,56 @@ export default function UpdateProduct() {
       <h2>Atualizar Produtos</h2>
       {mensagem && <p className="mensagem">{mensagem}</p>}
 
-      <div className="lista-produtos">
-        {produtos.length === 0 && <p>Nenhum produto encontrado.</p>}
+      <ul className="lista-produtos">
         {produtos.map((produto) => (
-          <div key={produto.id} className="produto-item">
-            <img
-              src={produto.imagemUrl}
-              alt={produto.nome}
-              width={80}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "https://via.placeholder.com/150?text=Sem+Imagem";
-              }}
-            />
-            <div className="info-produto">
-              <h3>{produto.nome}</h3>
-              <p>R$ {produto.preco.toFixed(2)}</p>
+          <li key={produto.id} className="produto-item">
+            <img src={produto.imagem} alt={produto.nome} className="imagem-produto" />
+            <div>
+              <h4>{produto.nome}</h4>
+              <p>R$ {produto.preco}</p>
+              <p>{produto.descricao}</p>
             </div>
-            <div className="acoes-produto">
-              <button onClick={() => abrirModal(produto)}>Editar</button>
-              <button onClick={() => removerProduto(produto.id)}>Remover</button>
+            <div className="botoes-produto">
+              <button onClick={() => iniciarEdicao(produto)}>Editar</button>
+              <button onClick={() => removerProduto(produto.id)}>Excluir</button>
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      {modalAberto && produtoEditando && (
-        <div className="modal">
-          <div className="modal-conteudo">
-            <h3>Editar Produto</h3>
-            <label>Nome:
-              <input type="text" name="nome" value={produtoEditando.nome} onChange={handleChange} />
-            </label>
-            <label>Preço:
-              <input type="number" step="0.01" name="preco" value={produtoEditando.preco} onChange={handleChange} />
-            </label>
-            <label>Nova Imagem:
-              <input type="file" onChange={(e) => setNovaImagemFile(e.target.files[0])} />
-            </label>
-            <div className="botoes-modal">
-              <button onClick={salvarAlteracoes}>Salvar</button>
-              <button onClick={fecharModal}>Cancelar</button>
-            </div>
+      {produtoEditando && (
+        <div className="formulario-edicao">
+          <h3>Editando: {produtoEditando.nome}</h3>
+          <input
+            type="text"
+            placeholder="Nome"
+            value={produtoEditando.nome}
+            onChange={(e) =>
+              setProdutoEditando({ ...produtoEditando, nome: e.target.value })
+            }
+          />
+          <input
+            type="number"
+            placeholder="Preço"
+            value={produtoEditando.preco}
+            onChange={(e) =>
+              setProdutoEditando({ ...produtoEditando, preco: e.target.value })
+            }
+          />
+          <textarea
+            placeholder="Descrição"
+            value={produtoEditando.descricao || ""}
+            onChange={(e) =>
+              setProdutoEditando({ ...produtoEditando, descricao: e.target.value })
+            }
+          />
+          <input
+            type="file"
+            onChange={(e) => setNovaImagemFile(e.target.files[0])}
+          />
+          <div className="botoes-edicao">
+            <button onClick={salvarAlteracoes}>Salvar</button>
+            <button onClick={cancelarEdicao}>Cancelar</button>
           </div>
         </div>
       )}
